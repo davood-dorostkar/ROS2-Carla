@@ -1,0 +1,165 @@
+#ifndef OBJFUSNOBJLISTTOVOLVOSNSRFUSNCONVERT_INT_H_
+#define OBJFUSNOBJLISTTOVOLVOSNSRFUSNCONVERT_INT_H_ 1
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/*==================[inclusions]============================================*/
+#include "tue_prv_common_types.h"
+#include "TueObjFusn_ObjectListType.h"
+#include "ObjFusnObjListToSnsrFusnConvert_Cfg.h"
+#include "Converters_types.h"
+
+/*==================[macros]================================================*/
+/*==================[type definitions]======================================*/
+
+/*==================[forward declarations]==================================*/
+/*==================[symbolic constants]====================================*/
+/*==================[external functions]====================================*/
+
+#define ObjFusn_START_SEC_SLOW_CODE
+
+LOCAL void initIdMngArray(void);
+
+LOCAL boolean setRaCamFusnID(CONSTP2CONST(TueObjFusn_ObjectListType,
+                                          AUTOMATIC,
+                                          ObjFusn_VAR_NOINIT) pObjList);
+
+LOCAL void checkRaCamFusnID(CONST(uint16, ObjFusn_VAR_NOINIT) u16FusionId,
+                            CONST(uint16, ObjFusn_VAR_NOINIT) u16Idx);
+
+LOCAL void clearTrackStatus(void);
+
+LOCAL void setNewRaCamID(CONST(uint16, ObjFusn_VAR_NOINIT) u16FusionId,
+                         CONST(uint16, ObjFusn_VAR_NOINIT) u16Idx);
+
+LOCAL uint8 getRaCamMotionType(CONST(uint16, ObjFusn_VAR_NOINIT) u16MotionType);
+
+LOCAL uint8 getRaCamMotionTypeHist(
+    CONSTP2CONST(uint8, AUTOMATIC, ObjFusn_VAR_NOINIT) u8motionType,
+    CONSTP2CONST(uint8, AUTOMATIC, ObjFusn_VAR_NOINIT) u8MotionTypeHist);
+
+LOCAL void getRaCamClassType(
+    CONSTP2CONST(TueObjFusn_TrackableType, AUTOMATIC, ObjFusn_VAR_NOINIT)
+        pFsnObj,
+    CONSTP2VAR(typeFrontFusionObjectVcc, AUTOMATIC, ObjFusn_VAR_NOINIT)
+        pRaCamObj,
+    const boolean bEgoIsStationary,
+    const uint16 u16RaCamIdx);
+
+LOCAL uint8 getRaCamTrackStatus(CONST(uint16, ObjFusn_VAR_NOINIT) u16Idx,
+                                CONST(uint32, ObjFusn_VAR_NOINIT)
+                                    u32SensorCurrent);
+
+LOCAL uint8 getPrimaryCMBB(
+    CONSTP2CONST(TueObjFusn_TrackableType, AUTOMATIC, ObjFusn_VAR_NOINIT)
+        pFusnObj,
+    CONSTP2CONST(TueObjFusn_EgoMotionType, AUTOMATIC, ObjFusn_VAR_NOINIT)
+        pEgoMotion);
+
+LOCAL uint8 getPositionConfidence(
+    CONSTP2CONST(typeFrontFusionObjectVcc, AUTOMATIC, ObjFusn_VAR_NOINIT)
+        pRaCamObj,
+    CONST(uint16, ObjFusn_VAR_NOINIT) u16Idx,
+    CONST(uint32, ObjFusn_VAR_NOINIT) u32SensorCurrent,
+    CONST(uint32, ObjFusn_VAR_NOINIT) u32Timestamp);
+
+LOCAL uint8 getTjaConfidence(void);
+
+LOCAL uint8 calculateConfidenceRoi(
+    CONSTP2CONST(TueObjFusn_TrackableType, AUTOMATIC, ObjFusn_VAR_NOINIT)
+        pTueObject,
+    CONSTP2CONST(uint8, AUTOMATIC, ObjFusn_VAR_NOINIT) u8EgoMotionIndex);
+
+LOCAL void updateVariances(
+    CONSTP2VAR(typeFrontFusionObjectVcc, AUTOMATIC, ObjFusn_VAR_NOINIT)
+        pRaCamObj,
+    CONSTP2CONST(TueObjFusn_TrackableType, AUTOMATIC, ObjFusn_VAR_NOINIT)
+        pTueObject,
+    CONST(float32, ObjFusn_VAR_NOINIT) f32SinHeading,
+    CONST(float32, ObjFusn_VAR_NOINIT) f32CosHeading);
+
+LOCAL uint8 getFusionSource(CONSTP2CONST(TueObjFusn_TrackableType,
+                                         AUTOMATIC,
+                                         ObjFusn_VAR_NOINIT) pTueObject);
+
+LOCAL boolean egoIsStationary(CONSTP2CONST(TueObjFusn_EgoMotionType,
+                                           AUTOMATIC,
+                                           ObjFusn_VAR_NOINIT) pEgoMotion);
+
+LOCAL uint8 getVisionClassType(const uint16 u16ClassType,
+                               const uint16 u16RaCamIdx);
+
+LOCAL uint8 getFcwConfidence(CONSTP2CONST(TueObjFusn_TrackableType,
+                                          AUTOMATIC,
+                                          ObjFusn_VAR_NOINIT) pTueObject,
+                             const float32 f32EgoSpeed,
+                             const float32 f32YawRate);
+
+#if TUE_RACAM_CONVERTER_OBJ_PLAUSIBILITY == STD_ON
+LOCAL boolean verifyObjectPlausibility(CONSTP2CONST(
+    TueObjFusn_TrackableType, AUTOMATIC, ObjFusn_VAR_NOINIT) pTueObj);
+#endif  // TUE_RACAM_CONVERTER_OBJ_PLAUSIBILITY == STD_ON
+
+#if TUE_RACAM_CONVERTER_ASIL_VERIFICATION == STD_ON
+
+LOCAL boolean verifyAsilLevel(P2CONST(TueObjFusn_TrackableType,
+                                      AUTOMATIC,
+                                      ObjFusn_VAR_NOINIT) pFusnObj);
+
+#endif  // TUE_RACAM_CONVERTER_ASIL_VERIFICATION == STD_ON
+
+#if TUE_RACAM_CONVERTER_CMBB_VALIDATION == STD_ON
+
+LOCAL void validateConfidence(CONSTP2VAR(typeFrontFusionObjectVcc,
+                                         AUTOMATIC,
+                                         ObjFusn_VAR_NOINIT) pRaCamObj,
+                              CONST(uint16, ObjFusn_VAR_NOINIT)
+                                  u16EgoMotionIndex);
+
+LOCAL uint16 getEgoMotionIndex(CONSTP2CONST(TueObjFusn_EgoMotionType,
+                                            AUTOMATIC,
+                                            ObjFusn_VAR_NOINIT) pEgoMotion);
+
+#endif  // TUE_RACAM_CONVERTER_CMBB_VALIDATION == STD_ON
+
+#define ObjFusn_STOP_SEC_SLOW_CODE
+
+/* begin: getter/setter for unit testing */
+#ifdef UNITTEST
+LOCAL uint16 getNumberOfRaCamObjects();
+
+LOCAL const sint16* const getPointerToMapFsnIdx();
+
+LOCAL const uint16* const getPointerToMapVolvoID();
+
+LOCAL uint8* const getPointerToTrackStatus();
+
+LOCAL const boolean* const getPointerToInputMatchedArray();
+
+LOCAL const boolean* const getPointerToTueFsnProcessObjToVolvoList();
+
+LOCAL const uint32* getPointerToPositionConfidenceAge();
+
+LOCAL uint32* const getPointerToSensorPatternHistory();
+
+LOCAL uint16 getIndexToLastRelevantObject();
+
+LOCAL void setNumberOfRaCamObjects(const uint16 u16NumRaCamObj);
+
+#endif /* UNITTEST */
+/* end: getter/setter for unit testing */
+
+/******************************************************************************
+DECLARATION OF FUNCTION-LIKE MACROS
+******************************************************************************/
+
+#ifdef __cplusplus
+}
+#endif
+/******************************************************************************
+End Of File
+*****************************************************************************/
+
+#endif /* OBJFUSNOBJLISTTOVOLVOSNSRFUSNCONVERT_INT_H_ */

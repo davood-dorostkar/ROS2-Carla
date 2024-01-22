@@ -1,0 +1,226 @@
+/*
+* Copyright (C) 2018-2020 by SenseTime Group Limited. All rights reserved.
+* wen mingshu <wenmingshu@senseauto.com>
+*/
+/*
+ * \file        $Id: ObjFusnObjListToVolvoSnsrFusnConvert_Cfg.h 1.9.1.29
+ * 2018/04/23 16:28:30CEST Stephan Rohr (stephan.rohr) in_test  $
+ *
+ *
+ *
+ *
+ * This module provides methods to convert objects of the volvo
+ * CADS4 object list
+ * This file provides configuration data of this module.
+ *
+ * <br>=====================================================<br>
+ * <b>Copyright 2014 by Tuerme.</b>
+ * <br>
+ * All rights reserved. Property of Tuerme.<br>
+ * Restricted rights to use, duplicate or disclose of this code<br>
+ * are granted through contract.
+ * <br>=====================================================<br>
+ */
+
+#ifndef SENSEAUTO_PILOT_DECISION_PILOT_DECISION_SDK_DECISION_SRC_FUSION_WRAPPER_INTEGRATION_CONVERTERS_OBJFUSNOBJLISTTOSNSRFUSNCONVERT_CFG_OBJFUSNOBJLISTTOSNSRFUSNCONVERT_CFG_H_
+#define SENSEAUTO_PILOT_DECISION_PILOT_DECISION_SDK_DECISION_SRC_FUSION_WRAPPER_INTEGRATION_CONVERTERS_OBJFUSNOBJLISTTOSNSRFUSNCONVERT_CFG_OBJFUSNOBJLISTTOSNSRFUSNCONVERT_CFG_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include "TueObjFusn_ConfigVehicle.h"
+
+/*==================[macros]================================================*/
+
+#define TUERACAM_SPEED_THRESHOLD (1.5f) /* speed threshold [m/s] */
+#define TUERACAM_SPEED_RADAR_THRESHOLD_SPEED                         \
+    (4.0f) // speed threshold[m/s] for radar only objects for class \
+            //   unidentified vehicle
+#define TUERACAM_RADAR_ONLY_TO_UNID_VEHICLE_MAX_HEADING                    \
+    (0.52f) /* Maximum heading angle for radar only objects and class type \
+               unidentified vehicle */
+#define TUERACAM_RADAR_ONLY_TO_UNID_VEHICLE_MIN_CYCLES_EGO_MOVING (80u)
+#define TUERACAM_RADAR_ONLY_TO_UNID_VEHICLE_NUM_CYCLES_EGO_STATIONARY (128u)
+#define TUERACAM_SPEED_VAR_THRESHOLD \
+    (1.0f) /* speed threshold [m/s] for calculation of stdDev */
+#define TUERACAM_SPEED_THRESHOLD_CONFIDENCE_CALCULATION                     \
+    (2.0f) // If absolute speed is less than threshold, variance of heading \
+            //   and acceleration will be set defined default values
+#define TUERACAM_DEFAULT_ACCELERATION_VARIANCE                         \
+    (1.0f) // Default values to be used if absolute speed is less than \
+            //   defined threshold
+#define TUERACAM_DEFAULT_HEADING_VARIANCE (1.0f)
+
+/** Geometry */
+#define TUERACAM_GEOMETRY_DEFAULT_WIDTH \
+    (0.2f) /* Default width used if track is not confirmed by vision */
+#define TUERACAM_GEOMETRY_MAX_NO_VISION_CYCLES                               \
+    (2u) // Use default width if number of no vision cycles exceeds paramter
+
+/* Sensor pattern indicating that object is seen by both sensors */
+#define TUERACAM_SENSOR_PATTERN_FUSED_OBJECT             \
+    (TUEOBJFUSN_TRACKABLE_U32SENSOR_RADAR_FRONT_CENTER | \
+     TUEOBJFUSN_TRACKABLE_U32SENSOR_MVS_FRONT)
+#define TUERACAM_SENSOR_PATTERN_COASTED (0u)
+
+/* Thresholds required for position confidence calculation */
+#define TUERACAM_POSITION_CONFIDENCE_ABS_SPEED_THRESHOLD                   \
+    (15.f) // Oncoming vehicles with absolute velocity less than threshold \
+            //   are set to radar only
+#define TUERACAM_POSITION_CONFIDENCE_TIMEOUT \
+    (1000u) /* for the first TUERACAM_POSITION_CONFIDENCE_TIMEOUT ms */
+
+#define TUERACAM_FUSION_SOURCE_COASTED (0x00u)
+#define TUERACAM_FUSION_SOURCE_RADAR_ONLY (0x01u)
+#define TUERACAM_FUSION_SOURCE_VISION_ONLY (0x02u)
+#define TUERACAM_FUSION_SOURCE_FUSED (0x03u)
+#define TUERACAM_FUSION_SOURCE_DEFAULT (0xFFu)
+
+/* Omit hardcoded magic numbers */
+#define TUERACAM_DEFAULT_LANE_LENGTH (100.f)
+#define TUERACAM_DEFAULT_TURN_INDICATOR (3u)
+#define TUERACAM_DEFAULT_VISION_ID (0u)
+
+/* Maximum values for Standard Deviation */
+#define TUERACAM_MAX_STD_DEV_SPEED (10.f)
+#define TUERACAM_MAX_STD_DEV_ACC (5.f)
+#define TUERACAM_MAX_STD_DEV_HEADING (1.57079f)
+
+/** Thresholds to determine if ego-vehicle is stationary */
+#define TUERACAM_EGO_MOTION_STATIONARY_MAX_SPEED (0.30f)
+#define TUERACAM_EGO_MOTION_STATIONARY_MAX_ACCELERATION (0.25f)
+
+/* Thresholds for assigning CMBB Values depending on quality */
+#define TUE_RACAM_CONVERTER_CMBB_HIGH_THRES (75.f)
+#define TUE_RACAM_CONVERTER_CMBB_MED_THRES (50.f)
+#define TUE_RACAM_CONVERTER_CMBB_LOW_THRES (25.f)
+
+#define TUE_RACAM_CONVERTER_MAX_COASTING_CYCLES_FOR_AEB (5u)
+
+/** Disable AEB for higher yaw-rates of the ego-vehicle */
+#define TUE_RACAM_CONVERTER_MAX_F32YAWRATE_FOR_AEB (0.30f)
+/* Maximum ego-speed to allow full brake on stationary target vehicles */
+#define TUE_RACAM_CONVERTER_STATIONARY_VEHICLE_MAX_EGO_SPEED_FULL_BRAKE (15.0f)
+/* Maximum Ego-Speed to allow partial brake on stationary target vehicles */
+#define TUE_RACAM_CONVERTER_STATIONARY_VEHICLE_MAX_EGO_SPEED_PARTIAL_BRAKE \
+    (22.5f)
+/* Maximum ego-speed to allow partial- or full-brake on moving target vehicle */
+#define TUE_RACAM_CONVERTER_MOVING_VEHICLE_MAX_EGO_SPEED (41.5f)
+/* Maximum Delta Speed to allow full brake on moving target vehicle */
+#define TUE_RACAM_CONVERTER_MOVING_VEHICLE_MAX_DELTA_SPEED (12.5f)
+
+/** Maximum Ego-Speed for Pedestrians */
+#define TUE_RACAM_CONVERTER_PEDESTRIAN_MAX_EGO_SPEED (16.0f)
+
+#define TUE_RACAM_CONVERTER_EGO_ACCELERATION_ONGOING_BRAKE (-4.0f)
+
+/* validate CMBBconfidence level with ROI*/
+#define TUE_RACAM_CONVERTER_CMBB_VALIDATION (STD_OFF)
+
+/* verify ASIL level of objects*/
+#define TUE_RACAM_CONVERTER_ASIL_VERIFICATION (STD_OFF)
+
+/* do plausibility checks for objects depending on class type */
+#define TUE_RACAM_CONVERTER_OBJ_PLAUSIBILITY (STD_ON)
+
+#if TUE_RACAM_CONVERTER_OBJ_PLAUSIBILITY == STD_ON
+
+/** Plausibility checks for class type Pedestrian */
+#define TUE_RACAM_CONVERTER_PLAUSIBILITY_CHECK_PEDESTRIAN_POS_X_MIN (2.f)
+#define TUE_RACAM_CONVERTER_PLAUSIBILITY_CHECK_PEDESTRIAN_POS_X_MAX (35.f)
+#define TUE_RACAM_CONVERTER_PLAUSIBILITY_CHECK_PEDESTRIAN_POS_Y_MIN (-15.f)
+#define TUE_RACAM_CONVERTER_PLAUSIBILITY_CHECK_PEDESTRIAN_POS_Y_MAX (15.f)
+#define TUE_RACAM_CONVERTER_PLAUSIBILITY_CHECK_PEDESTRIAN_VEL_X_MIN (-8.f)
+#define TUE_RACAM_CONVERTER_PLAUSIBILITY_CHECK_PEDESTRIAN_VEL_X_MAX (8.f)
+#define TUE_RACAM_CONVERTER_PLAUSIBILITY_CHECK_PEDESTRIAN_VEL_Y_MIN (-8.f)
+#define TUE_RACAM_CONVERTER_PLAUSIBILITY_CHECK_PEDESTRIAN_VEL_Y_MAX (8.f)
+#define TUE_RACAM_CONVERTER_PLAUSIBILITY_CHECK_PEDESTRIAN_SPEED_MAX (8.f)
+#define TUE_RACAM_CONVERTER_PLAUSIBILITY_CHECK_PEDESTRIAN_ACC_X_MIN (-1.5f)
+#define TUE_RACAM_CONVERTER_PLAUSIBILITY_CHECK_PEDESTRIAN_ACC_X_MAX (1.5f)
+#define TUE_RACAM_CONVERTER_PLAUSIBILITY_CHECK_PEDESTRIAN_ACC_Y_MIN (-1.5f)
+#define TUE_RACAM_CONVERTER_PLAUSIBILITY_CHECK_PEDESTRIAN_ACC_Y_MAX (1.5f)
+#define TUE_RACAM_CONVERTER_PLAUSIBILITY_CHECK_PEDESTRIAN_YAW_RATE_MIN \
+    (-1.2566f)
+#define TUE_RACAM_CONVERTER_PLAUSIBILITY_CHECK_PEDESTRIAN_YAW_RATE_MAX (1.2566f)
+
+/** Plausibility checks for class type Vehicle */
+#define TUE_RACAM_CONVERTER_PLAUSIBILITY_CHECK_VEHICLE_POS_X_MIN (2.f)
+#define TUE_RACAM_CONVERTER_PLAUSIBILITY_CHECK_VEHICLE_POS_X_MAX (70.f)
+#define TUE_RACAM_CONVERTER_PLAUSIBILITY_CHECK_VEHICLE_POS_Y_MIN (-15.f)
+#define TUE_RACAM_CONVERTER_PLAUSIBILITY_CHECK_VEHICLE_POS_Y_MAX (15.f)
+#define TUE_RACAM_CONVERTER_PLAUSIBILITY_CHECK_VEHICLE_VEL_X_MIN (-4.f)
+#define TUE_RACAM_CONVERTER_PLAUSIBILITY_CHECK_VEHICLE_VEL_X_MAX (20.f)
+#define TUE_RACAM_CONVERTER_PLAUSIBILITY_CHECK_VEHICLE_VEL_Y_MIN (-5.f)
+#define TUE_RACAM_CONVERTER_PLAUSIBILITY_CHECK_VEHICLE_VEL_Y_MAX (5.f)
+#define TUE_RACAM_CONVERTER_PLAUSIBILITY_CHECK_VEHICLE_ACC_X_MIN (-10.f)
+#define TUE_RACAM_CONVERTER_PLAUSIBILITY_CHECK_VEHICLE_ACC_X_MAX (10.f)
+#define TUE_RACAM_CONVERTER_PLAUSIBILITY_CHECK_VEHICLE_ACC_Y_MIN (-1.5f)
+#define TUE_RACAM_CONVERTER_PLAUSIBILITY_CHECK_VEHICLE_ACC_Y_MAX (1.5f)
+#define TUE_RACAM_CONVERTER_PLAUSIBILITY_CHECK_VEHICLE_SPEED_MAX (40.f)
+#define TUE_RACAM_CONVERTER_PLAUSIBILITY_CHECK_VEHICLE_YAW_RATE_MIN (-0.5236f)
+#define TUE_RACAM_CONVERTER_PLAUSIBILITY_CHECK_VEHICLE_YAW_RATE_MAX (0.5236f)
+#define TUE_RACAM_CONVERTER_PLAUSIBILITY_CHECK_VEHICLE_HEADING_MIN (-0.7854f)
+#define TUE_RACAM_CONVERTER_PLAUSIBILITY_CHECK_VEHICLE_HEADING_MAX (0.7854f)
+
+#endif
+
+#if TUE_RACAM_CONVERTER_CMBB_VALIDATION == STD_ON
+#define TUE_RACAM_CONVERTER_ROI_LUT_SIZE (9u)
+
+LOCAL CONST(float32, ObjFusn_CONST)
+    s_af32EgoSpeedDataPoints[TUE_RACAM_CONVERTER_ROI_LUT_SIZE] = {
+        10.f / 3.6f, 15.f / 3.6f, 20.f / 3.6f, 25.f / 3.6f, 30.f / 3.6f,
+        35.f / 3.6f, 40.f / 3.6f, 45.f / 3.6f, 50.f / 3.6f};
+
+/* Pedestrian/unknown class longitudinal values for confidence level 2 */
+LOCAL CONST(float32, ObjFusn_CONST)
+    s_af32PedLongLowConfidence[TUE_RACAM_CONVERTER_ROI_LUT_SIZE] = {
+        2.6f, 4.2f, 6.f, 6.5f, 6.7f, 8.15f, 9.5f, 10.f, 10.5f};
+LOCAL CONST(float32, ObjFusn_CONST)
+    s_af32PedLatLowConfidence[TUE_RACAM_CONVERTER_ROI_LUT_SIZE] = {
+        1.2f, 1.3f, 1.54f, 1.65f, 1.87f, 1.87f, 1.87f, 1.87f, 1.87f};
+
+/* Pedestrian/unknown class longitudinal values for confidence level 3 */
+LOCAL CONST(float32, ObjFusn_CONST)
+    s_af32PedLongHighConfidence[TUE_RACAM_CONVERTER_ROI_LUT_SIZE] = {
+        2.5f, 3.85f, 5.2f, 5.7f, 5.9f, 7.15f, 8.5f, 9.f, 9.5f};
+LOCAL CONST(float32, ObjFusn_CONST)
+    s_af32PedLatHighConfidence[TUE_RACAM_CONVERTER_ROI_LUT_SIZE] = {
+        1.1f, 1.15f, 1.37f, 1.4f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f};
+
+/* Car/Truck class longitudinal values for confidence level 2 */
+LOCAL CONST(float32, ObjFusn_CONST)
+    s_af32VehLongLowConfidence[TUE_RACAM_CONVERTER_ROI_LUT_SIZE] = {
+        1.94f, 3.5f, 5.f, 6.7f, 8.75f, 11.42f, 14.45f, 15.5f, 19.f};
+LOCAL CONST(float32, ObjFusn_CONST)
+    s_af32VehLatLowConfidence[TUE_RACAM_CONVERTER_ROI_LUT_SIZE] = {
+        1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f};
+
+/* Car/Truck class longitudinal values for confidence level 3 */
+LOCAL CONST(float32, ObjFusn_CONST)
+    s_af32VehLongHighConfidence[TUE_RACAM_CONVERTER_ROI_LUT_SIZE] = {
+        1.75f, 3.1f, 4.44f, 5.f, 6.5f, 7.6f, 9.5f, 11.5f, 13.f};
+LOCAL CONST(float32, ObjFusn_CONST)
+    s_af32VehLatHighConfidence[TUE_RACAM_CONVERTER_ROI_LUT_SIZE] = {
+        1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f};
+
+#endif
+
+/** Constants used for FCW calculation */
+#define TUE_RACAM_CONVERTER_MIN_F32EXISTENCEQUALITY_FOR_FCW (50.f)
+#define TUE_RACAM_CONVERTER_MAX_F32YAWRATE_FOR_FCW (0.3f)
+#define TUE_RACAM_CONVERTER_MAX_U8NOSENSORCYCLES_FOR_FCW (4u)
+#define TUE_RACAM_CONVERTER_MAX_EGOSPEED_FOR_FCW (41.75f)
+#define TUE_RACAM_CONVERTER_MAX_EGOSPEED_STATIONARY_TARGET_FOR_FCW (33.f)
+#define TUE_RACAM_CONVERTER_MAX_EGOSPEED_PEDESTRIAN_FOR_FCW (16.75f)
+
+/*==================[function]====================================*/
+
+/*==================[external constants]====================================*/
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif  // SENSEAUTO_PILOT_DECISION_PILOT_DECISION_SDK_DECISION_SRC_FUSION_WRAPPER_INTEGRATION_CONVERTERS_OBJFUSNOBJLISTTOSNSRFUSNCONVERT_CFG_OBJFUSNOBJLISTTOSNSRFUSNCONVERT_CFG_H_

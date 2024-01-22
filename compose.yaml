@@ -1,0 +1,29 @@
+version: "3"
+
+services:
+  ros:
+    build:
+      context: .
+      dockerfile: Dockerfile_ros
+    network_mode: host
+    container_name: ros-carla
+    privileged: true
+    stdin_open: true
+    tty: true
+    environment:
+      - DISPLAY=$DISPLAY
+      - QT_X11_NO_MITSHM=1
+      - CARLA_ROOT=/carla
+
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - $HOME/.Xauthority:/root/.Xauthority
+      - ./config:/app/config
+      - ./figures:/app/figures
+      - ./scenario_runner-0.9.13:/app/scenario_runner-0.9.13
+      - ./src:/app/src
+      - ./source_env.sh:/app/source_env.sh
+      - ./frames.gv:/app/frames.gv
+      - /opt/carla/v0.9.13:/carla
+
+    command: /bin/bash
