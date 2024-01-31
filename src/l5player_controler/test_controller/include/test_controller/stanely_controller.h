@@ -8,6 +8,7 @@
 
 #include "Eigen/Core"
 #include "common.h"
+#include "test_controller/rateLimiter.h"
 
 namespace l5player
 {
@@ -17,8 +18,12 @@ namespace l5player
 
         class StanleyController
         {
+        private:
+            double angleCommandMaxChangeRate_ = 0.1;
+            RateLimiter limiter_;
+
         public:
-            StanleyController(){};
+            StanleyController() : limiter_(0.1){};
             ~StanleyController(){};
 
             void LoadControlConf();

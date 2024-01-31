@@ -28,7 +28,8 @@ add_executable(${PROJECT_NAME}_node
                 src/vehicle_longitudinal_controller_pid.cpp 
                 src/pid_controller.cpp 
                 src/reference_line.cpp
-                src/stanley_controller.cpp)
+                src/stanley_controller.cpp
+                src/rateLimiter.cpp)
 
 ament_target_dependencies(${PROJECT_NAME}_node std_msgs rclcpp geometry_msgs nav_msgs carla_msgs visualization_msgs tf2 tf2_ros tf2_geometry_msgs)
 

@@ -252,6 +252,7 @@ void VehicleControlPublisher::VehicleControlIterationCallback()
     }
 
     stanely_controller_lateral->ComputeControlCmd(this->vehicle_state_, this->planning_published_trajectory, cmd);
+
     double acceleration_cmd = pid_controller_longitudinal->Control(v_err, 0.01);
 
     control_cmd.header.stamp = this->now();
