@@ -31,7 +31,8 @@ RUN sudo apt-get update && sudo apt-get install -y  \
     ros-${ROS_DISTRO}-ackermann-msgs
 RUN source /opt/ros/foxy/setup.bash && rosdep update
 RUN source /opt/ros/foxy/setup.bash && rosdep install --from-paths src --ignore-src -y
-RUN source /opt/ros/foxy/setup.bash && colcon build 
+RUN source /opt/ros/foxy/setup.bash && colcon build --packages-skip test_controller
+RUN sudo apt-get update && sudo apt-get install -y vim
 
 RUN apt-get clean && \
     apt-get autoclean && \
@@ -41,13 +42,18 @@ RUN apt-get clean && \
     /var/lib/apt/lists/*
 
 ARG USERNAME=ros
-RUN useradd  -m -G sudo $USERNAME && \
+RUN useradd -m -s /bin/bash -G sudo $USERNAME && \
     echo "$USERNAME ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/$USERNAME && \
     chmod 0440 /etc/sudoers.d/$USERNAME
 RUN chown -R ros:ros /app
+RUN sed -i '/# sudo hint/,/# fi/ s/^/# /' /etc/bash.bashrc
 USER $USERNAME
 ENV PYTHONPATH=$PYTHONPATH:$CARLA_ROOT/PythonAPI/carla/dist/carla-0.9.13-py3.7-linux-x86_64.egg:$CARLA_ROOT/PythonAPI/carla
 ENV SCENARIO_RUNNER_ROOT=/app/scenario_runner-0.9.13
 RUN echo 'export USER=$USERNAME' >> ~/.bashrc 
 RUN echo "source /ros_entrypoint.sh" >> ~/.bashrc
 RUN echo "source /app/source_env.sh" >> ~/.bashrc
+RUN echo "set +e" >> ~/.bashrc
+RUN echo "export TERM=xterm-256color" >> ~/.bashrc
+# CMD [ "/bin/bash" ]
+ENTRYPOINT [ "/bin/bash" ]

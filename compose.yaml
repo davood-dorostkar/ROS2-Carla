@@ -25,5 +25,3 @@ services:
       - ./source_env.sh:/app/source_env.sh
       - ./frames.gv:/app/frames.gv
       - /opt/carla/v0.9.13:/carla
-
-    command: /bin/bash
