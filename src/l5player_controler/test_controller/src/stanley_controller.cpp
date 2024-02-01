@@ -61,15 +61,29 @@ namespace l5player
             // double kp = 0.5;
             // cmd.steer_target = kp * e_y;
 
-            int k_soft_ = 1;
             double lateral_actuator_saturation_deg_ = 20;
             double lateral_actuator_saturation_ = lateral_actuator_saturation_deg_ * (M_PI / 180.0);
-            double hadingCorrActive_ = 1;
-            double CTECorrActive_ = 1;
             double k_p_stanley_ActionOverall = 1;
-            double gain_stanley_ = 1;
+            double hadingCorrActive_ = 1;
+            double CTECorrActive_ = 0.3;
+            double gain_stanley_ = 1.0;
+            int k_soft_ = 5;
 
-            double angleCommand_ = -1 * k_p_stanley_ActionOverall * ((hadingCorrActive_ * e_theta) + (-1 * CTECorrActive_ * atan(gain_stanley_ * e_y / (k_soft_ + current_vehicle_velocity))));
+            double angleCommand_ = 0;
+            if (e_theta > M_PI)
+            {
+                e_theta -= M_PI * 2;
+            }
+            if (e_theta < -M_PI)
+            {
+                e_theta += M_PI * 2;
+            }
+            // angleCommand_ = e_theta;
+            // angleCommand_ = e_theta + atan2(1 * e_y, (10 + current_vehicle_velocity));
+
+            // angleCommand_ = -1 * k_p_stanley_ActionOverall * ((hadingCorrActive_ * e_theta) + (-1 * CTECorrActive_ * atan(gain_stanley_ * e_y / (k_soft_ + current_vehicle_velocity))));
+            angleCommand_ = 1 * k_p_stanley_ActionOverall * ((hadingCorrActive_ * e_theta) + (1 * CTECorrActive_ * atan(gain_stanley_ * e_y / (k_soft_ + current_vehicle_velocity))));
+
             if (angleCommand_ > lateral_actuator_saturation_)
             {
                 angleCommand_ = lateral_actuator_saturation_;
@@ -79,8 +93,11 @@ namespace l5player
                 angleCommand_ = -lateral_actuator_saturation_;
             }
 
-            double angleCommandDeg_ = limiter_.limitChange(angleCommand_ * (M_PI / 180.0));
-            cmd.steer_target = angleCommandDeg_ * (180.0 / M_PI);
+            angleCommand_ = limiter_.limitChange(angleCommand_);
+
+            cmd.steer_target = angleCommand_;
+            // cout << "ey: " << e_y << " etheta: " << e_theta << endl;
+            cout << "heading err: " << e_theta * 180 / M_PI << " ct err:" << e_y << " steer: " << angleCommand_ * 180 / M_PI << endl;
         }
 
         // /** to-do **/ 计算需要的误差，包括横向误差，纵向误差，误差计算函数没有传入主车速度，因此返回的位置误差就是误差，不是根据误差计算得到的前轮转角

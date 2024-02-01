@@ -23,7 +23,7 @@ namespace l5player
             RateLimiter limiter_;
 
         public:
-            StanleyController() : limiter_(0.1){};
+            StanleyController() : limiter_(angleCommandMaxChangeRate_){};
             ~StanleyController(){};
 
             void LoadControlConf();

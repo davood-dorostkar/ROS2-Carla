@@ -247,8 +247,8 @@ void VehicleControlPublisher::VehicleControlIterationCallback()
 
     if (cnt % 1 == 0)
     {
-        cout << "v: " << vehicle_state_.v << ", target v: " << target_point_.v << ", v_err: " << v_err << endl;
-        cout << "yaw_err: " << yaw_err << endl;
+        // cout << "v: " << vehicle_state_.v << ", target v: " << target_point_.v << ", v_err: " << v_err << endl;
+        // cout << "yaw_err: " << yaw_err << endl;
     }
 
     stanely_controller_lateral->ComputeControlCmd(this->vehicle_state_, this->planning_published_trajectory, cmd);
