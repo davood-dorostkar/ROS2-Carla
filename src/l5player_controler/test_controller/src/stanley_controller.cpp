@@ -17,6 +17,7 @@ namespace l5player
     {
 
         l5player::control::PIDController e_theta_pid_controller(1.0, 0.0, 0.4); // PID控制器中的微分环节相当于阻尼，加在航向误差引起的前轮转角上
+        PIDController e_CT_PID_controller(1.0, 0.01, 200.0);
 
         double atan2_to_PI(const double atan2)
         {
@@ -65,7 +66,7 @@ namespace l5player
             double lateral_actuator_saturation_ = lateral_actuator_saturation_deg_ * (M_PI / 180.0);
             double k_p_stanley_ActionOverall = 1;
             double hadingCorrActive_ = 1;
-            double CTECorrActive_ = 0.3;
+            double CTECorrActive_ = 0.5;
             double gain_stanley_ = 1.0;
             int k_soft_ = 5;
 
@@ -78,11 +79,11 @@ namespace l5player
             {
                 e_theta += M_PI * 2;
             }
-            // angleCommand_ = e_theta;
-            // angleCommand_ = e_theta + atan2(1 * e_y, (10 + current_vehicle_velocity));
-
-            // angleCommand_ = -1 * k_p_stanley_ActionOverall * ((hadingCorrActive_ * e_theta) + (-1 * CTECorrActive_ * atan(gain_stanley_ * e_y / (k_soft_ + current_vehicle_velocity))));
-            angleCommand_ = 1 * k_p_stanley_ActionOverall * ((hadingCorrActive_ * e_theta) + (1 * CTECorrActive_ * atan(gain_stanley_ * e_y / (k_soft_ + current_vehicle_velocity))));
+            // e_y = e_CT_PID_controller.Control(e_y, 0.01);
+            double e_CT_term = (1 * CTECorrActive_ * atan(gain_stanley_ * e_y / (k_soft_ + current_vehicle_velocity)));
+            e_CT_term = e_CT_PID_controller.Control(e_CT_term, 0.01);
+            double e_Heading_term = (hadingCorrActive_ * e_theta);
+            angleCommand_ = 1 * k_p_stanley_ActionOverall * (e_Heading_term + e_CT_term);
 
             if (angleCommand_ > lateral_actuator_saturation_)
             {
@@ -97,7 +98,8 @@ namespace l5player
 
             cmd.steer_target = angleCommand_;
             // cout << "ey: " << e_y << " etheta: " << e_theta << endl;
-            cout << "heading err: " << e_theta * 180 / M_PI << " ct err:" << e_y << " steer: " << angleCommand_ * 180 / M_PI << endl;
+            // cout << "heading err: " << e_theta * 180 / M_PI << " ct err:" << e_y << " steer: " << angleCommand_ * 180 / M_PI << endl;
+            cout << "heading term: " << e_Heading_term << " ct term:" << e_CT_term << " steer: " << angleCommand_ * 180 / M_PI << endl;
         }
 
         // /** to-do **/ 计算需要的误差，包括横向误差，纵向误差，误差计算函数没有传入主车速度，因此返回的位置误差就是误差，不是根据误差计算得到的前轮转角
