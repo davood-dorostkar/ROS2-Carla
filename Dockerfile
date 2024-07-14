@@ -17,7 +17,7 @@ RUN bash install_ipopt.sh
 RUN bash install_osqp.sh
 RUN bash install_qp_oases.sh
 
-RUN pip3 install empy lark pygame transforms3d numpy networkx pexpect
+RUN pip3 install empy lark pygame transforms3d pexpect Pillow
 RUN apt-get update && apt-get install -y coinor-libipopt-dev 
 RUN apt-get update && apt-get install -y python3-colcon-common-extensions
 # ENV CARLA_ROOT=/carla
@@ -33,6 +33,9 @@ RUN source /opt/ros/foxy/setup.bash && rosdep update
 RUN source /opt/ros/foxy/setup.bash && rosdep install --from-paths src --ignore-src -y
 RUN source /opt/ros/foxy/setup.bash && colcon build --packages-skip test_controller
 RUN sudo apt-get update && sudo apt-get install -y vim
+
+COPY scenario_runner/requirements.txt /app/
+RUN pip3 install -r /app/requirements.txt
 
 RUN apt-get clean && \
     apt-get autoclean && \

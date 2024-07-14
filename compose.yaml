@@ -4,7 +4,7 @@ services:
   ros:
     build:
       context: .
-      dockerfile: Dockerfile_ros
+      dockerfile: Dockerfile
     network_mode: host
     container_name: ros-carla
     privileged: true
