@@ -1,104 +1,73 @@
-# 欢迎仪式
-<b><strong>欢迎大家来到自动驾驶Player(L5Player)的自动驾驶算法与仿真空间，在这个空间我们将一起完成这些事情：<strong><b>
-1. 控制算法构建基础模块并仿真调试：PID、LQR、Stanley 、MPC、滑膜控制、模糊控制、横向控制、纵向控制
-2. 运动规划算法构建基础模块并仿真调试：样条曲线、贝塞尔曲线、ASTAR、RRT、动态规划、二次规划、EM Planer、Lattice Planer
-3. 基于以上基础模块构建L2～L4功能模块： AEB、ACC、LKA、TJA、ALC、高速NOP、城市NOP、AVP
-4. 文章、算法、理论、书籍分享；
-5. 日常交流，行业咨询分享；
-<br> 
+# Introduction
+this is a simulation setup to use Carla simulator with ROS2.
 
-<b><strong>建立这个项目的目的，是希望从零开始，搭建完整的自动驾驶系统，并且与大家共同完成<strong><b>
-<br>
-github地址: https://github.com/L5Player/AutoDriving-Planning-Control-Algorithm-Simulation-Carla<br>
-gitte地址：https://gitee.com/nannanbe/auto-driving-planning-control-algorithm-simulation-carla<br>
-b站： https://www.bilibili.com/video/BV1sb411f75o/?spm_id_from=333.999.0.0
-
-<br> 
-
-# 博客地址
-<b><strong>想要一起学习的伙伴，请关注我的CSDN、b站、知乎、公众号：自动驾驶Player(L5Player)<strong><b>
-<br>CSDN有系列专栏可以订阅<br>
-CSDN地址: https://blog.csdn.net/nn243823163/category_11685852.html?spm=1001.2014.3001.5482<br>
-知乎地址：https://www.zhihu.com/people/L5Player
-
-<br> 
-<br> 
-
-# 首先启动Crla仿真器
-1. 在Carla下运行：./CarlaUE4.sh 或 ./CarlaUE4.sh -prefernvidia
-<br><br>
+# Installation
+download Carla:
+```bash
+wget -v https://carla-releases.s3.us-east-005.backblazeb2.com/Linux/CARLA_0.9.13.tar.gz
+```
+```bash
+tar xvzf CARLA_0.9.13.tar.gz -C /opt/carla/
+```
+```bash
+docker-compose up -d --build
+```
+# Run Carla Server
+in the host machine:
+```
+cd /opt/carla/v0.9.13
+./CarlaUE4.sh -prefernvidia
+```
 ![carla](./figures/carla.png) 
-<br><br>
 
-# NEW NOP function scenario design and control
-1. source source_env.sh
-2. ros2 launch carla_l5player_bridge_ego_vis carla_bridge_ego_vehilce.launch.py
-3. python3 src/l5player_functions/carla_l5player_nop/carla_scripts/vehicle_gallery_aeb.py
-4. ros2 run carla_l5player_nop carla_l5player_nop_node                                              
-5. 同时启动rviz: ros2 launch carla_l5player_nop nop_launch.py 
-6. build: colcon build --packages-select carla_l5player_nop
-<br><br>
+# Run Carla Client
+in the docker container:
 
-# NOP function scenario design and control
-1. source source_env.sh
-2. ros2 launch carla_l5player_bridge_ego_vis carla_bridge_ego_vehilce.launch.py
-3. python3 src/l5player_functions/carla_l5player_nop/carla_scripts/vehicle_gallery_aeb.py
-4. ros2 run carla_l5player_nop_with_python_script carla_l5player_nop_with_python_script_node        
-5. 同时启动rviz: ros2 launch carla_l5player_nop_with_python_script nop_launch.py 
-6. build: colcon build --packages-select carla_l5player_nop_with_python_script
-<br><br>
+## NEW NOP function scenario
+-  ros2 launch carla_l5player_bridge_ego_vis carla_bridge_ego_vehilce.launch.py
+-  python3 src/l5player_functions/carla_l5player_nop/carla_scripts/vehicle_gallery_aeb.py
+-  ros2 run carla_l5player_nop carla_l5player_nop_node                                              
+-  ros2 launch carla_l5player_nop nop_launch.py 
+-  build: colcon build --packages-select carla_l5player_nop
 
-# AEB function scenario design and control
-0. 通过python api设计AEB场景并实现功能
-1. source source_env.sh
-2. ros2 launch carla_l5player_bridge_ego_vis carla_bridge_ego_vehilce.launch.py
-3. python vehicle_gallery_aeb.py
-4. ros2 run carla_l5player_aeb_with_python_script carla_l5player_aeb_with_python_script_node
-<br><br>
+## NOP function scenario 
+- ros2 launch carla_l5player_bridge_ego_vis carla_bridge_ego_vehilce.launch.py
+- python3 src/l5player_functions/carla_l5player_nop/carla_scripts/vehicle_gallery_aeb.py
+- ros2 run carla_l5player_nop_with_python_script carla_l5player_nop_with_python_script_node        
+- ros2 launch carla_l5player_nop_with_python_script nop_launch.py 
+- build: colcon build --packages-select carla_l5player_nop_with_python_script
 
-# LQR PID Controller with Waypoint
-0. 通过Waypoint Publisher发布轨迹并进行跟随
-1. source source_env.sh
-2. ros2 launch carla_ros_bridge carla_ros_bridge_with_example_ego_vehicle.launch.py
-3. ros2 launch carla_l5player_lqr_pid_controller_waypoint lqr_launch.py
-4. ros2 launch carla_waypoint_publisher carla_waypoint_publisher.launch.py
-<br><br>
+## AEB function scenario 
+- ros2 launch carla_l5player_bridge_ego_vis carla_bridge_ego_vehilce.launch.py
+- python vehicle_gallery_aeb.py
+- ros2 run carla_l5player_aeb_with_python_script carla_l5player_aeb_with_python_script_node
 
-# NEW PID 模块启动流程
-0. 在PID Controler基础上更换导航路径，增加launch启动脚本以及rviz显示全局路径以及历史轨迹
-1. source source_env.sh
-2. ros2 launch carla_l5player_bridge_ego_vis carla_bridge_ego_vehilce.launch.py
-3. ros2 run carla_l5player_pid_new_controller carla_l5player_pid_new_controller_node
-4. 启动节点以及rviz: ros2 launch carla_l5player_pid_new_controller new_pid_launch.py
-<br><br>
+## LQR PID Controller with Waypoint
+- ros2 launch carla_ros_bridge carla_ros_bridge_with_example_ego_vehicle.launch.py
+- ros2 launch carla_l5player_lqr_pid_controller_waypoint lqr_launch.py
+- ros2 launch carla_waypoint_publisher carla_waypoint_publisher.launch.py
 
-# PID 模块启动流程
-1. source source_env.sh
-2. ros2 launch carla_l5player_bridge_ego_vis carla_bridge_ego_vehilce.launch.py
-3. ros2 run carla_l5player_pid_controller carla_l5player_pid_controller_node
-<br><br>
+## NEW PID 
+- ros2 launch carla_l5player_bridge_ego_vis carla_bridge_ego_vehilce.launch.py
+- ros2 run carla_l5player_pid_new_controller carla_l5player_pid_new_controller_node
+- 启动节点以及rviz: ros2 launch carla_l5player_pid_new_controller new_pid_launch.py
 
-# Stanley 模块启动流程
-1. source source_env.sh
-2. ros2 launch carla_l5player_bridge_ego_vis carla_bridge_ego_vehilce.launch.py
-3. ros2 run carla_l5player_stanley_pid_controller carla_l5player_stanley_pid_controller_node
-<br><br>
+## PID 
+- ros2 launch carla_l5player_bridge_ego_vis carla_bridge_ego_vehilce.launch.py
+- ros2 run carla_l5player_pid_controller carla_l5player_pid_controller_node
 
-# LQR 模块启动流程
-1. source source_env.sh
-2. ros2 launch carla_l5player_bridge_ego_vis carla_bridge_ego_vehilce.launch.py
-3. ros2 launch carla_l5player_lqr_pid_controller lqr_launch.py
-<br><br>
+## Stanley 
+- ros2 launch carla_l5player_bridge_ego_vis carla_bridge_ego_vehilce.launch.py
+- ros2 run carla_l5player_stanley_pid_controller carla_l5player_stanley_pid_controller_node
 
-# MPC 模块启动流程
-1. source source_env.sh
-2. ros2 launch carla_l5player_bridge_ego_vis carla_bridge_ego_vehilce.launch.py
-3. ros2 launch carla_l5player_mpc_controller mpc_launch.py
-<br><br>
+## LQR 
+- ros2 launch carla_l5player_bridge_ego_vis carla_bridge_ego_vehilce.launch.py
+- ros2 launch carla_l5player_lqr_pid_controller lqr_launch.py
 
-# 场景仿真器启动
-首先将carla仿真器通过软连接添加到本项目同级目录下，然后进入项目目录
-1. source source_env.sh
-2. ros2 launch carla_ad_demo carla_ad_demo_with_scenario.launch.py scenario_runner_path:=/app/scenario_runner-0.9.13
-<br><br>
+## MPC 
+- ros2 launch carla_l5player_bridge_ego_vis carla_bridge_ego_vehilce.launch.py
+- ros2 launch carla_l5player_mpc_controller mpc_launch.py
 
+## Scene Simulator
+First, add the carla simulator to the same directory as this project through a soft link, and then enter the project directory
+- ros2 launch carla_ad_demo carla_ad_demo_with_scenario.launch.py scenario_runner_path:=/app/scenario_runner-0.9.13
