@@ -16,8 +16,7 @@ docker-compose up -d --build
 # Run Carla Server
 in the host machine:
 ```
-cd /opt/carla/v0.9.13
-./CarlaUE4.sh -prefernvidia
+cd /opt/carla/v0.9.13 && ./CarlaUE4.sh -prefernvidia
 ```
 ![](./figures/carla.png) 
 

@@ -2,9 +2,7 @@ version: "3"
 
 services:
   ros:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: dadorostkar/ros-carla
     network_mode: host
     container_name: ros-carla
     privileged: true
@@ -26,4 +24,4 @@ services:
       - ./frames.gv:/app/frames.gv
       - /opt/carla/v0.9.13:/carla
 
-    command: /bin/bash
+    entrypoint: /bin/bash
