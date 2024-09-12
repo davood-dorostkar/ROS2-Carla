@@ -12,6 +12,7 @@ services:
       - DISPLAY=$DISPLAY
       - QT_X11_NO_MITSHM=1
       - CARLA_ROOT=/carla
+      - SDL_VIDEODRIVER=x11
 
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
@@ -25,3 +26,12 @@ services:
       - /opt/carla/v0.9.13:/carla
 
     entrypoint: /bin/bash
+    runtime: nvidia
+    deploy:
+        resources:
+            reservations:
+                devices:
+                    - driver: nvidia
+                      count: all
+                      capabilities:
+                          - gpu
