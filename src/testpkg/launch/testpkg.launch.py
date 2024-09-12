@@ -44,11 +44,7 @@ def generate_launch_description():
             ############ option 1: custom start point
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(
-                    [
-                        PathJoinSubstitution(
-                            [FindPackageShare("carla_spawn_objects"), "carla_example_ego_vehicle.launch.py"]
-                        )
-                    ]
+                    [PathJoinSubstitution([FindPackageShare("carla_spawn_objects"), "carla_spawn_objects.launch.py"])]
                 ),
                 launch_arguments={
                     "host": LaunchConfiguration("host"),

@@ -1,3 +1,8 @@
+## run carla server without extra windo
+```
+./CarlaUE4.sh -RenderOffScreen -prefernvidia
+```
+
 ## visualize with rviz
 after running your node/launch:
 ```
@@ -220,3 +225,111 @@ if __name__ == "__main__":
 
 
 ```
+## Required Components of a Simulation
+these components are discussed in the following parts.
+```
+├── imports
+├── set default arguments
+├── add ROS bridge (carla_ros_bridge)
+├── add objects (carla_spawn_objects)
+├── add pygame visualizer (carla_manual_control)
+└── other nodes and packages (control, planner, ...)
+```
+## Add ROS bridge (carla_ros_bridge)
+```py
+IncludeLaunchDescription(
+    PythonLaunchDescriptionSource(
+        [PathJoinSubstitution([FindPackageShare("carla_ros_bridge"), "carla_ros_bridge.launch.py"])]
+    ),
+    launch_arguments={
+        "host": LaunchConfiguration("host"),
+        "port": LaunchConfiguration("port"),
+        "town": LaunchConfiguration("town"),
+        "timeout": LaunchConfiguration("timeout"),
+        "passive": LaunchConfiguration("passive"),
+        "synchronous_mode": LaunchConfiguration("synchronous_mode"),
+        "synchronous_mode_wait_for_vehicle_control_command": LaunchConfiguration(
+            "synchronous_mode_wait_for_vehicle_control_command"
+        ),
+        "fixed_delta_seconds": LaunchConfiguration("fixed_delta_seconds"),
+    }.items(),
+),
+```
+## Add Objects to Simulation (carla_spawn_objects)
+the package responsible for this in the ROS-CARLA-Bridge is `carla_spawn_objects`. you can select the initial definitions like the car select, sensors attached to car, and other actors in a `.json` file.
+1. first add the file to `setup.py`:
+```py
+data_files=[
+        ...
+        ("share/" + package_name + "/config", ["config/objects.json"]),
+        ...
+]
+```
+2. pass the config file to spawn objects launch file:
+```py
+IncludeLaunchDescription(
+    PythonLaunchDescriptionSource(
+        [
+            PathJoinSubstitution(
+                [FindPackageShare("carla_spawn_objects"), "carla_spawn_objects.launch.py"]
+            )
+        ]
+    ),
+    launch_arguments={
+        "host": LaunchConfiguration("host"),
+        "port": LaunchConfiguration("port"),
+        "timeout": LaunchConfiguration("timeout"),
+        "vehicle_filter": LaunchConfiguration("vehicle_filter"),
+        "role_name": LaunchConfiguration("role_name"),
+        "spawn_point": LaunchConfiguration("spawn_point"),
+        "objects_definition_file": PathJoinSubstitution(
+            [FindPackageShare("testpkg"), "config/objects.json"]
+        ),
+        "spawn_point_ego_vehicle": LaunchConfiguration("spawn_point"),
+    }.items(),
+),
+```
+3. define the file like this:
+```json
+{
+    "objects": [
+        {
+            ///
+        },
+        {
+            ///
+        }
+    ]
+}
+```
+4. a reference for sections of the config file:
+
+    [simplified version](/src/testpkg/config/objects.json) 
+    
+    [full version](/src/ros-bridge/carla_spawn_objects/config/objects.json)
+
+    [list of all cars](https://carla.readthedocs.io/en/latest/catalogue_vehicles/)
+
+5. if you want to visualize the sim in a pygame window, you need to have a camera with `"id": "rgb_view"` in the config file. set its resolution to that of the manual_control node that you import into your simulation (your launch and setup.py file). the default visualization package for this is `carla_manual_control` in the ROS-CARLA-Bridge.
+6. having a lot of sensors, especially camera and lidar sensors can significantly reduce the simulation speed, so you can remove unnecessary sensors to improve the simulation speed.
+
+## Add pygame Visualizer (carla_manual_control)
+this package is responsible for visalizing the simulation, and get keyboard inputs. 
+- in the main loop, the `ManualControl` class render method is called to update the visualization.
+  
+  >if you want to change the screen size, change it in the main loop. 
+- this render updates other rendering tasks as well.
+- a subscriber is defined to get the values of `rgb_view` camera which is the main camera.
+- other subsribers are also defined to update other data. 
+- odometry, gnss, and other data are updated and showed with `HUD` class.
+  
+  >if you want to change the font size and other attributes of the HUD, change them in the class's `init` or `render` method.
+  
+  to change the font size:
+  ```py
+  self._font_mono = pygame.font.Font(mono, 10) # change 10
+  ```
+  to change the HUD gray background width:
+  ```py
+  info_surface = pygame.Surface((220, self.dim[1])) # change 220
+  ````
