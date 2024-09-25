@@ -290,7 +290,7 @@ IncludeLaunchDescription(
 ),
 ```
 3. define the file like this:
-```json
+```jsonc
 {
     "objects": [
         {
