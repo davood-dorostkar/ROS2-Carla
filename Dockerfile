@@ -53,8 +53,10 @@ RUN useradd -m -G sudo $USERNAME && \
 
 USER $USERNAME
 ENV PYTHONPATH=$PYTHONPATH:$CARLA_ROOT/PythonAPI/carla
-RUN echo "export PYTHONPATH=\$PYTHONPATH:\$(find $CARLA_ROOT/PythonAPI/carla/dist -name 'carla-*-linux-x86_64.egg')" >> ~/.bashrc && \
+RUN echo 'export PYTHONPATH=$PYTHONPATH:$(find $CARLA_ROOT/PythonAPI/carla/dist -name "carla-*-linux-x86_64.egg" | paste -sd: -)' >> ~/.bashrc && \
     echo 'export USER=$USERNAME' >> ~/.bashrc && \
     echo "source /ros_entrypoint.sh" >> ~/.bashrc && \
-    echo "source /app/source_env.sh" >> ~/.bashrc
+    echo "source /app/source_env.sh" >> ~/.bashrc && \
+    echo 'set +e' >> ~/.bashrc && \
+    echo 'alias python="python3"' >> ~/.bashrc
 WORKDIR /app

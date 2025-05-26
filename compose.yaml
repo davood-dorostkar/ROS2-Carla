@@ -8,11 +8,13 @@ services:
     privileged: true
     stdin_open: true
     tty: true
+    runtime: nvidia
     environment:
       - DISPLAY=$DISPLAY
       - QT_X11_NO_MITSHM=1
       - XAUTHORITY=/root/.Xauthority
-
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - $HOME/.Xauthority:/root/.Xauthority
@@ -23,5 +25,12 @@ services:
       - ./scenario_runner-0.9.13:/app/scenario_runner-0.9.13
       - ./source_env.sh:/app/source_env.sh
       - ./frames.gv:/app/frames.gv
-
     command: /bin/bash
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities:
+                - gpu
