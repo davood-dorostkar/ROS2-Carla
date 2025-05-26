@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   ros:
     build:
@@ -13,17 +11,16 @@ services:
     environment:
       - DISPLAY=$DISPLAY
       - QT_X11_NO_MITSHM=1
-      - CARLA_ROOT=/carla
 
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - $HOME/.Xauthority:/root/.Xauthority
+      - /opt/carla/v0.9.13:/opt/carla
       - ./config:/app/config
       - ./figures:/app/figures
-      - ./scenario_runner-0.9.13:/app/scenario_runner-0.9.13
       - ./src:/app/src
+      - ./scenario_runner-0.9.13:/app/scenario_runner-0.9.13
       - ./source_env.sh:/app/source_env.sh
       - ./frames.gv:/app/frames.gv
-      - /opt/carla/v0.9.13:/carla
 
     command: /bin/bash
